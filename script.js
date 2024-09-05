@@ -83,14 +83,6 @@ function reset_grid(){
             grid[j][i] = false;
         }
     }
-    set_cell(10, 10, true);
-    set_cell(10, 11, true);
-    set_cell(10, 12, true);
-    set_cell(11, 12, true);
-    set_cell(9, 11, true);
-    background(0);
-    set_tex();
-    draw_grid();
 }
 
 function set_tex(){
@@ -109,12 +101,6 @@ function set_tex(){
                 tex.pixels[coord + 2] = 0;
                 tex.pixels[coord + 3] = 255;
             }
-            //if(j % 2 == 0){
-            //    tex.pixels[coord] = 255;
-            //    tex.pixels[coord + 1] = 0;
-            //    tex.pixels[coord + 2] = 255;
-            //    tex.pixels[coord + 3] = 255;
-            //}
         }
     } 
     tex.updatePixels();
@@ -122,10 +108,12 @@ function set_tex(){
 
 function mouseWheel(event){
     if(event.delta > 0){
-        translate(0, 0, 1);
+        translated_z -= 10;
     }else{
-        translate(0, 0, -1); 
+        translated_z += 10
     }
+    //translated_z = min(translated_z, 380);
+    console.log(translated_z);
 }
 
 
@@ -139,8 +127,8 @@ let WIDTH = 500;
 let HEIGHT = 500;
 let cell_width = 5;
 
-let width = 100;
-let height = 100;
+let width = 50;
+let height = 50;
 let options = {width: width, height:height};
 let tex;
 let interval = 1;
@@ -148,7 +136,10 @@ let paused = true;
 let grid = [];
 
 
-let zoom = 0;
+let translated_x = 0;
+let translated_y = 0;
+let translated_z = 0;
+
 
 
 
@@ -174,14 +165,52 @@ function setup(){
 }
 
 
+function mouseClicked(){
+    if(mouseButton == LEFT){
+        console.log("this was clicked");
+        let pos_x = Math.floor((mouseX - translated_x) * width / WIDTH);
+        let pos_y = Math.floor((mouseY - translated_y) * height / HEIGHT);
+        if(pos_x < width && pos_y < height){
+            grid[pos_x][pos_y] = true;
+            set_tex();
+        }
+        console.log(pos_x, pos_y);
+    }
+}
+
+function mousePressed(){
+
+
+    return false;
+}
+
+
 
 function draw(){
-    if(!paused){
+    if(keyIsDown(LEFT_ARROW) == true){
+        translated_x += 10; 
+    }
+    if(keyIsDown(RIGHT_ARROW) == true){
+        translated_x -= 10;
+    }
+    if(keyIsDown(UP_ARROW) == true){
+        translated_y += 10; 
+    }
+    if(keyIsDown(DOWN_ARROW) == true){
+        translated_y -= 10;
+    }
+
+
+
+
+
     background(0);
+    translate(translated_x, translated_y, translated_z);
+    if(!paused){
         new_gen();
         set_tex();
-        draw_grid();
     }
+    draw_grid();
 }
 
 
@@ -203,3 +232,7 @@ reset.addEventListener("click", ()=>{
     reset_grid();
     paused = true;
 })
+
+document.addEventListener("contextmenu", (event)=>{
+    event.preventDefault();
+});
