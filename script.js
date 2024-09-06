@@ -150,6 +150,8 @@ let population = 0;
 let generation = 0;
 
 
+
+
 let canvas_tex;
 function setup(){
     for(let i = 0; i < width; i++){
@@ -189,6 +191,13 @@ function mouseClicked(){
         //console.log(pos_x, pos_y);
     }
 }
+
+function mousePressed(){
+
+
+    return false;
+}
+
 
 function draw(){
     //if(keyIsDown(LEFT_ARROW) == true){
