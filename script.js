@@ -2,6 +2,9 @@ let next = document.getElementById("next");
 let play = document.getElementById("play");
 let reset = document.getElementById("reset");
 
+let pop_count = document.getElementById("population");
+let gen_count = document.getElementById("generation");
+
 function set_color(ctx, color){
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
@@ -53,6 +56,12 @@ function set_cell(x, y, status){
 }
 
 function new_gen(){
+    if(population <= 0){
+        paused = true;
+        play.textContent = "play";
+        return;
+    }
+    generation++;
     let temp = JSON.parse(JSON.stringify(grid));
     for(let i = 0; i < width; i++){
         for(let j = 0; j < height; j++){
@@ -61,20 +70,24 @@ function new_gen(){
                 if(num < 2){
                     // dies
                     temp[i][j] = false;
+                    population--;
                 }else if(num > 3){
                     // dies
                     temp[i][j] = false;
+                    population--;
                 }
             }else{
                 if(num == 3){
                     // becomes live
                     temp[i][j] = true;
+                    population++;
                 }
             }
         }
     }
     grid = [...temp];
-
+    pop_count.textContent = `Population: ${population}`;
+    gen_count.textContent = `Generation: ${generation}`;
 }
 
 function reset_grid(){
@@ -83,6 +96,12 @@ function reset_grid(){
             grid[j][i] = false;
         }
     }
+    set_tex();
+    draw_grid();
+    population = 0;
+    generation = 0;
+    pop_count.textContent = `Population: ${population}`;
+    gen_count.textContent = `Generation: ${generation}`;
 }
 
 function set_tex(){
@@ -106,19 +125,7 @@ function set_tex(){
     tex.updatePixels();
 }
 
-function mouseWheel(event){
-    if(event.delta > 0){
-        translated_z -= 10;
-    }else{
-        translated_z += 10
-    }
-    //translated_z = min(translated_z, 380);
-    console.log(translated_z);
-}
-
-
 function draw_grid(){
-    //fill(0, 0, 255);
     texture(tex);
     quad(-WIDTH/2, -HEIGHT/2, WIDTH/2, -HEIGHT/2, WIDTH/2, HEIGHT/2, -WIDTH/2, HEIGHT/2);
 }
@@ -127,8 +134,8 @@ let WIDTH = 500;
 let HEIGHT = 500;
 let cell_width = 5;
 
-let width = 50;
-let height = 50;
+let width = 100;
+let height = 100;
 let options = {width: width, height:height};
 let tex;
 let interval = 1;
@@ -139,8 +146,8 @@ let grid = [];
 let translated_x = 0;
 let translated_y = 0;
 let translated_z = 0;
-
-
+let population = 0;
+let generation = 0;
 
 
 let canvas_tex;
@@ -167,53 +174,44 @@ function setup(){
 
 function mouseClicked(){
     if(mouseButton == LEFT){
-        console.log("this was clicked");
         let pos_x = Math.floor((mouseX - translated_x) * width / WIDTH);
         let pos_y = Math.floor((mouseY - translated_y) * height / HEIGHT);
         if(pos_x < width && pos_y < height){
-            grid[pos_x][pos_y] = true;
+            population += grid[pos_x][pos_y]? -1: 1;
+            grid[pos_x][pos_y] = !grid[pos_x][pos_y];
+
             set_tex();
+            paused = true;
+            play.textContent = "play";
+            pop_count.textContent = `Population: ${population}`;
+            draw_grid();
         }
-        console.log(pos_x, pos_y);
+        //console.log(pos_x, pos_y);
     }
 }
-
-function mousePressed(){
-
-
-    return false;
-}
-
-
 
 function draw(){
-    if(keyIsDown(LEFT_ARROW) == true){
-        translated_x += 10; 
-    }
-    if(keyIsDown(RIGHT_ARROW) == true){
-        translated_x -= 10;
-    }
-    if(keyIsDown(UP_ARROW) == true){
-        translated_y += 10; 
-    }
-    if(keyIsDown(DOWN_ARROW) == true){
-        translated_y -= 10;
-    }
+    //if(keyIsDown(LEFT_ARROW) == true){
+    //    translated_x += 10; 
+    //}
+    //if(keyIsDown(RIGHT_ARROW) == true){
+    //    translated_x -= 10;
+    //}
+    //if(keyIsDown(UP_ARROW) == true){
+    //    translated_y += 10; 
+    //}
+    //if(keyIsDown(DOWN_ARROW) == true){
+    //    translated_y -= 10;
+    //}
 
 
-
-
-
-    background(0);
-    translate(translated_x, translated_y, translated_z);
+    //translate(translated_x, translated_y, translated_z);
     if(!paused){
         new_gen();
         set_tex();
+        draw_grid();
     }
-    draw_grid();
 }
-
-
 
 next.addEventListener("click", ()=>{
     if(paused){
@@ -226,13 +224,11 @@ next.addEventListener("click", ()=>{
 
 play.addEventListener("click", ()=>{
     paused = !paused;
-})
+    play.textContent = paused? "play": "pause";
+});
 
 reset.addEventListener("click", ()=>{
     reset_grid();
     paused = true;
-})
-
-document.addEventListener("contextmenu", (event)=>{
-    event.preventDefault();
+    play.textContent = paused? "play": "pause";
 });

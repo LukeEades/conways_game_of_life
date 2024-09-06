@@ -9,7 +9,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Conways Game of Life</h1>
+    <div>
+        <h2>Background</h2>
+        <p>Conways Game of Life is cellular automation that was created by John Horton Conway back in 1970. He devised it by his initial idea of the game but then trial and error of the rules in order to get the desired result: something that would allow paterns to grow without the ability to prove an output pattern from an input. He initially tested it out himself on a go board by using the pieces for the states. It's far more efficient and less error prone to represent it in a computer simulation instead.</p>
+    </div>
+    <div>
+        <h2>Functionality</h2>
+        <p>The whole thing is just a grid of cells where each one can contain 1 of two states: dead or alive, populated or unpopulated, on or off. It doesn't really matter what this state is represented as but what does matter is how we manipulate in accordance with other cells, however, for clarities sake, I'm going to go ahead and keep referring to cells as either dead or alive. To clear things up, in the following definitions a cell's neighbors are all adjacent cells, horizontally, vertically, and diagonally. There are a few main rules that allow the game to function. Rule 1: Any live cell with less than two live neighbors dies. Rule 2: Any live cell with two or three live neighbors stays live to the next cycle. Rule 3: Any live cell with more than three live neighbors dies. Rule 4: Any dead cell that has exactly 3 live neighbors becomes alive. When I say that a cell lives on to the next generation what I mean is that the whole game is thought of in cycles or generations. Each time a new generation is called for it takes the previous one and sets the new cells in accordance with the rules and the previous generations cell states. The way that each outcome is completely determined by the previous generation ensures that the output from one input will always be the same, a pure function. Due to these rules, just from a small initial input pattern, large explosions of cellular life can appear to occur before settling down into a looping final state. It's really quite neat and the things that people have done with it are crazy. People have devised computers built inside of the game. They have found patterns that spawn patterns that spawn more patterns. It's insane and really cool to watch it unfold.</p>
+    </div>
     <div id="game">
+        <div id="generation">Generation: 0</div>
+        <div id="population">Population: 0</div>
         <div id="canvas"></div>
         <button id="next">next</button>
         <button id="play">play</button>
