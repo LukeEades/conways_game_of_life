@@ -1,7 +1,6 @@
 body{
     height: 100vh;
 }
-
 #canvas{
     display: flex;
     justify-content: center;
