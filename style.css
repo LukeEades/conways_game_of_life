@@ -12,21 +12,32 @@ body{
     display: grid;
     flex-direction: column;
     justify-content: center;
+    justify-items: center;
+    align-items: center;
     grid-template-rows: 1fr 10fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
 }
 
 #next{
+    width: 50%;
+    height: 75%;
+    border-radius: 1rem;
     grid-row: 3/4;
     grid-column: 2/3;
 }
 
 #play{
+    border-radius: 1rem;
+    width: 50%;
+    height: 75%;
     grid-row: 3/4;
     grid-column: 1/2;
 }
 
 #reset{
+    border-radius: 1rem;
+    width: 50%;
+    height: 75%;
     grid-row: 3/4;
     grid-column: 3/4;
 }

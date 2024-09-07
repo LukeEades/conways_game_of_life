@@ -130,8 +130,8 @@ function draw_grid(){
     quad(-WIDTH/2, -HEIGHT/2, WIDTH/2, -HEIGHT/2, WIDTH/2, HEIGHT/2, -WIDTH/2, HEIGHT/2);
 }
 
-let WIDTH = 500;
-let HEIGHT = 500;
+let WIDTH = 700;
+let HEIGHT = 700;
 let cell_width = 5;
 
 let width = 100;
@@ -178,7 +178,7 @@ function mouseClicked(){
     if(mouseButton == LEFT){
         let pos_x = Math.floor((mouseX - translated_x) * width / WIDTH);
         let pos_y = Math.floor((mouseY - translated_y) * height / HEIGHT);
-        if(pos_x < width && pos_y < height){
+        if(pos_x < width && pos_y < height && pos_x > 0 && pos_y > 0){
             population += grid[pos_x][pos_y]? -1: 1;
             grid[pos_x][pos_y] = !grid[pos_x][pos_y];
 
